@@ -1,5 +1,16 @@
 'use client';
-import { getUSDCBalance, getETHBalance, getUSDTBalance, getBalanceBSC_USDC, getBalanceBSC_USDT, getBalancePolygon_USDC, getBalancePolygon_USDT, getBTCBalance } from '@/api/balance';
+import {
+    getUSDCBalance,
+    getETHBalance,
+    getUSDTBalance,
+    getBalanceBSC_USDC,
+    getBalanceBSC_USDT,
+    getBalancePolygon_USDC,
+    getBalancePolygon_USDT,
+    getBTCBalance,
+    getUsdtTRONBalance,
+    getUsdcTRONBalance,
+} from '@/api/balance';
 import IconCopy from '@/components/icon/icon-copy';
 import { Dialog, Transition } from '@headlessui/react';
 import { usePathname } from 'next/navigation';
@@ -67,7 +78,12 @@ function WalletDetails() {
             } else if (item.assetId === 'BTC') {
                 const btcBalance = await getBTCBalance(item.address);
                 balance = btcBalance.balanceBTC;
-                console.log('balance', balance);
+            } else if (item.assetId === 'USDT_TRON') {
+                const usdt_tronBalance = await getUsdtTRONBalance(item.address);
+                balance = usdt_tronBalance.body.finalBalance;
+            } else if (item.assetId === 'USDC_TRON') {
+                const usdc_tronBalance = await getUsdcTRONBalance(item.address);
+                balance = usdc_tronBalance.body.finalBalance;
             } else {
                 // console.log(`${item.assetId} Balance`, balance);
             }

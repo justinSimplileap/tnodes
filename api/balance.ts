@@ -47,3 +47,16 @@ export const getBTCBalance = async (walletAddress: string): Promise<any> => {
     if (!response.ok) throw new Error('Failed to fetch BTC balance');
     return response.json();
 };
+
+// USDT_TRON
+export const getUsdtTRONBalance = async (walletAddress: string): Promise<any> => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/balance/usdt_tron/${walletAddress}`);
+    if (!response.ok) throw new Error('Failed to fetch USDT_TRON balance');
+    return response.json();
+};
+// USDC_TRON
+export const getUsdcTRONBalance = async (walletAddress: string): Promise<any> => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/balance/usdc_tron/${walletAddress}`);
+    if (!response.ok) throw new Error('Failed to fetch USDC_TRON balance');
+    return response.json();
+};
