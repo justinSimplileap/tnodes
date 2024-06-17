@@ -16,7 +16,7 @@ function WalletDetails() {
     const pathname = usePathname();
     const walletId = pathname.split('/wallets/')[1];
     const [mnemonicsList, setMnemonicsList] = useState<any>([]);
-    const [getBalance, setgetBalance] = useState<any>([]);
+    // const [getBalance, setgetBalance] = useState<any>([]);
     const [mnemonics, setMnemonics] = useState([]);
     const [addContactModal, setAddContactModal] = useState<any>(false);
     const [loading, setLoading] = useState<any>(false);
@@ -40,36 +40,36 @@ function WalletDetails() {
     }, [walletId]);
 
     // ---------------------------------------------------
-    const getBalances = async (mnemonicsList: any[]) => {
-        const balancePromises = mnemonicsList.map(async (item: any) => {
-            let balance = 0;
-            if (item.assetId === 'ETH') {
-                const ethBalance = await getETHBalance(item.address);
-                balance = ethBalance.body.etherAmount;
-            } else if (item.assetId === 'USDC') {
-                const usdcBalance = await getUSDCBalance(item.address);
-                balance = usdcBalance.body.resultInEther;
-            } else if (item.assetId === 'USDT_ERC20') {
-                const usdtBalance = await getUSDTBalance(item.address);
-                balance = usdtBalance.body.resultInEther;
-            } else {
-                // console.log(`${item.assetId} Balance`, balance);
-            }
-            return { ...item, balance };
-        });
+    // const getBalances = async (mnemonicsList: any[]) => {
+    //     const balancePromises = mnemonicsList.map(async (item: any) => {
+    //         let balance = 0;
+    //         if (item.assetId === 'ETH') {
+    //             const ethBalance = await getETHBalance(item.address);
+    //             balance = ethBalance.body.etherAmount;
+    //         } else if (item.assetId === 'USDC') {
+    //             const usdcBalance = await getUSDCBalance(item.address);
+    //             balance = usdcBalance.body.resultInEther;
+    //         } else if (item.assetId === 'USDT_ERC20') {
+    //             const usdtBalance = await getUSDTBalance(item.address);
+    //             balance = usdtBalance.body.resultInEther;
+    //         } else {
+    //             // console.log(`${item.assetId} Balance`, balance);
+    //         }
+    //         return { ...item, balance };
+    //     });
 
-        const balances = await Promise.all(balancePromises);
-        return balances;
-    };
+    //     const balances = await Promise.all(balancePromises);
+    //     return balances;
+    // };
 
-    useEffect(() => {
-        const fetchBalances = async () => {
-            const result = await getBalances(mnemonicsList);
-            setgetBalance(result);
-        };
+    // useEffect(() => {
+    //     const fetchBalances = async () => {
+    //         const result = await getBalances(mnemonicsList);
+    //         setgetBalance(result);
+    //     };
 
-        fetchBalances();
-    }, [mnemonicsList]);
+    //     fetchBalances();
+    // }, [mnemonicsList]);
 
     // ---------------------------------------------------
 
@@ -192,7 +192,7 @@ function WalletDetails() {
                                                 <input
                                                     id="receiverAddress"
                                                     type="text"
-                                                    placeholder="Enter Title"
+                                                    placeholder="Enter Address"
                                                     className="form-input"
                                                     value={params.receiverAddress}
                                                     onChange={(e) => changeValue(e)}
@@ -288,7 +288,7 @@ function WalletDetails() {
                             </tr>
                         </thead>
                         <tbody>
-                            {getBalance.map((mnemonic: any) => {
+                            {mnemonicsList.map((mnemonic: any) => {
                                 return (
                                     <tr key={mnemonic.id}>
                                         <td className="">{mnemonic.id}</td>

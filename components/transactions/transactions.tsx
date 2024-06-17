@@ -11,11 +11,13 @@ const Transactions = () => {
     const [search, setSearch] = useState<any>('');
     const [transactionsList, setTransactionsList] = useState<any>([]);
 
+    console.log('transactionsList', transactionsList);
+
     const getAllMnemonics = async () => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/transactions/`);
             const data = await response.json();
-            setTransactionsList(data.mnemonics || []);
+            setTransactionsList(data.allTransactions || []);
         } catch (error) {
             console.error('Error fetching Mnemonics:', error);
         }
