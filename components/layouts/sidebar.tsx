@@ -72,8 +72,10 @@ const Sidebar = () => {
                 <div className="h-full bg-white dark:bg-black">
                     <div className="flex items-center justify-between px-4 py-3">
                         <Link href="/" className="main-logo flex shrink-0 items-center">
-                            <img className="ml-[5px] w-8 flex-none" src="/assets/images/logo.svg" alt="logo" />
-                            <span className="align-middle text-2xl font-semibold dark:text-white-light lg:inline ltr:ml-1.5 rtl:mr-1.5">Turbo Nodes</span>
+                            <img className="ml-[5px] w-8 flex-none " src="/assets/images/logo.svg" alt="logo" />
+                            <span className="align-middle text-2xl font-semibold dark:text-white-light lg:inline ltr:ml-1.5 rtl:mr-1.5">
+                                <span className="dark:text-white">Turbo</span> <span className=" text-[#6e07e5] ">Nodes</span>{' '}
+                            </span>
                         </Link>
 
                         <button
