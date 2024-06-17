@@ -1,5 +1,5 @@
 'use client';
-import { getUSDCBalance, getETHBalance, getUSDTBalance } from '@/api/balance';
+import { getUSDCBalance, getETHBalance, getUSDTBalance, getBalanceBSC_USDC, getBalanceBSC_USDT, getBalancePolygon_USDC, getBalancePolygon_USDT, getBTCBalance } from '@/api/balance';
 import IconCopy from '@/components/icon/icon-copy';
 import { Dialog, Transition } from '@headlessui/react';
 import { usePathname } from 'next/navigation';
@@ -16,7 +16,7 @@ function WalletDetails() {
     const pathname = usePathname();
     const walletId = pathname.split('/wallets/')[1];
     const [mnemonicsList, setMnemonicsList] = useState<any>([]);
-    // const [getBalance, setgetBalance] = useState<any>([]);
+    const [getBalance, setgetBalance] = useState<any>([]);
     const [mnemonics, setMnemonics] = useState([]);
     const [addContactModal, setAddContactModal] = useState<any>(false);
     const [loading, setLoading] = useState<any>(false);
@@ -40,36 +40,52 @@ function WalletDetails() {
     }, [walletId]);
 
     // ---------------------------------------------------
-    // const getBalances = async (mnemonicsList: any[]) => {
-    //     const balancePromises = mnemonicsList.map(async (item: any) => {
-    //         let balance = 0;
-    //         if (item.assetId === 'ETH') {
-    //             const ethBalance = await getETHBalance(item.address);
-    //             balance = ethBalance.body.etherAmount;
-    //         } else if (item.assetId === 'USDC') {
-    //             const usdcBalance = await getUSDCBalance(item.address);
-    //             balance = usdcBalance.body.resultInEther;
-    //         } else if (item.assetId === 'USDT_ERC20') {
-    //             const usdtBalance = await getUSDTBalance(item.address);
-    //             balance = usdtBalance.body.resultInEther;
-    //         } else {
-    //             // console.log(`${item.assetId} Balance`, balance);
-    //         }
-    //         return { ...item, balance };
-    //     });
+    const getBalances = async (mnemonicsList: any[]) => {
+        const balancePromises = mnemonicsList.map(async (item: any) => {
+            let balance = 0;
+            if (item.assetId === 'ETH') {
+                const ethBalance = await getETHBalance(item.address);
+                balance = ethBalance.body.etherAmount;
+            } else if (item.assetId === 'USDC') {
+                const usdcBalance = await getUSDCBalance(item.address);
+                balance = usdcBalance.body.resultInEther;
+            } else if (item.assetId === 'USDT_ERC20') {
+                const usdtBalance = await getUSDTBalance(item.address);
+                balance = usdtBalance.body.resultInEther;
+            } else if (item.assetId === 'USDC_BSC') {
+                const usdcbscBalance = await getBalanceBSC_USDC(item.address);
+                balance = usdcbscBalance.body.resultInEther;
+            } else if (item.assetId === 'USDT_BSC') {
+                const usdtbscBalance = await getBalanceBSC_USDT(item.address);
+                balance = usdtbscBalance.body.resultInEther;
+            } else if (item.assetId === 'USDC_POLYGON') {
+                const usdcpolygonBalance = await getBalancePolygon_USDC(item.address);
+                balance = usdcpolygonBalance.body.resultInEther;
+            } else if (item.assetId === 'USDT_POLYGON') {
+                const usdtpolygonBalance = await getBalancePolygon_USDT(item.address);
+                balance = usdtpolygonBalance.body.resultInEther;
+            } else if (item.assetId === 'BTC') {
+                const btcBalance = await getBTCBalance(item.address);
+                balance = btcBalance.balanceBTC;
+                console.log('balance', balance);
+            } else {
+                // console.log(`${item.assetId} Balance`, balance);
+            }
+            return { ...item, balance };
+        });
 
-    //     const balances = await Promise.all(balancePromises);
-    //     return balances;
-    // };
+        const balances = await Promise.all(balancePromises);
+        return balances;
+    };
 
-    // useEffect(() => {
-    //     const fetchBalances = async () => {
-    //         const result = await getBalances(mnemonicsList);
-    //         setgetBalance(result);
-    //     };
+    useEffect(() => {
+        const fetchBalances = async () => {
+            const result = await getBalances(mnemonicsList);
+            setgetBalance(result);
+        };
 
-    //     fetchBalances();
-    // }, [mnemonicsList]);
+        fetchBalances();
+    }, [mnemonicsList]);
 
     // ---------------------------------------------------
 
@@ -288,7 +304,7 @@ function WalletDetails() {
                             </tr>
                         </thead>
                         <tbody>
-                            {mnemonicsList.map((mnemonic: any) => {
+                            {getBalance.map((mnemonic: any) => {
                                 return (
                                     <tr key={mnemonic.id}>
                                         <td className="">{mnemonic.id}</td>
