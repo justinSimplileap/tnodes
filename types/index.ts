@@ -1,4 +1,4 @@
-interface Transaction extends Common {
+export interface Transaction extends Common {
     assetId: string;
     transactionId: string;
     transactiontype: string;
