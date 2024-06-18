@@ -16,11 +16,15 @@ import IconMenuAuthentication from '@/components/icon/menu/icon-menu-authenticat
 import { usePathname } from 'next/navigation';
 import { getTranslation } from '@/i18n';
 import IconCreditCard from '../icon/icon-credit-card';
+import IconUsers from '../icon/icon-users';
+import { useRouter } from 'next/navigation';
+import IconCashBanknotes from '../icon/icon-cash-banknotes';
 
 const Sidebar = () => {
     const dispatch = useDispatch();
     const { t } = getTranslation();
     const pathname = usePathname();
+    const router = useRouter();
     const [currentMenu, setCurrentMenu] = useState<string>('');
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
     const semidark = useSelector((state: IRootState) => state.themeConfig.semidark);
@@ -64,6 +68,13 @@ const Sidebar = () => {
         selector?.classList.add('active');
     };
 
+    
+    const handleLogout = () => {
+        sessionStorage.clear();
+        localStorage.clear();
+        void router.push('/auth/login');
+    };
+
     return (
         <div className={semidark ? 'dark' : ''}>
             <nav
@@ -86,7 +97,7 @@ const Sidebar = () => {
                             <IconCaretsDown className="m-auto rotate-90" />
                         </button>
                     </div>
-                    <PerfectScrollbar className="relative h-[calc(100vh-80px)]">
+                    <PerfectScrollbar className="relative h-[calc(95vh-80px)]">
                         <ul className="relative space-y-0.5 p-4 py-0 font-semibold">
                             {/* <li className="menu nav-item">
                                 <button type="button" className={`${currentMenu === 'dashboard' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('dashboard')}>
@@ -121,6 +132,30 @@ const Sidebar = () => {
                                         <span className="text-black dark:text-[#506690] dark:group-hover:text-white-dark ltr:pl-3 rtl:pr-3">{t('Transaction')}</span>
                                     </div>
                                 </Link>
+                            </li>
+
+                            <li className="menu nav-item">
+                                <Link href="/adminwallets" className="group">
+                                    <div className="flex items-center">
+                                        <IconCashBanknotes className="shrink-0 group-hover:!text-primary" />
+                                        <span className="text-black dark:text-[#506690] dark:group-hover:text-white-dark ltr:pl-3 rtl:pr-3">{t('Admin Wallets')}</span>
+                                    </div>
+                                </Link>
+                            </li>
+                        </ul>
+                    </PerfectScrollbar>
+                    <PerfectScrollbar>
+                        <ul className="relative space-y-0.5 p-4 py-0 font-semibold">
+                            <li className="menu nav-item">
+                                {/* Use onClick to handle logout */}
+                                <button onClick={handleLogout} className="group">
+                                    <div className="flex items-center">
+                                        <IconUsers className="shrink-0 group-hover:!text-primary" />
+                                        <span className="text-black dark:text-[#506690] dark:group-hover:text-white-dark ltr:pl-3 rtl:pr-3">
+                                            Sign Out
+                                        </span>
+                                    </div>
+                                </button>
                             </li>
                         </ul>
                     </PerfectScrollbar>

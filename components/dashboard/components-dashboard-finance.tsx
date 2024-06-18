@@ -15,9 +15,12 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { useSelector } from 'react-redux';
+import IconCopy from '../icon/icon-copy';
+import Swal from 'sweetalert2';
 
 const ComponentsDashboardFinance = () => {
     const [isMounted, setIsMounted] = useState(false);
+    const [transactionsList, setTransactionsList] = useState<any>([]);
     useEffect(() => {
         setIsMounted(true);
     }, []);
@@ -390,6 +393,68 @@ const ComponentsDashboardFinance = () => {
 
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl';
 
+    const gettenTransaction = async () => {
+        try {
+            const url = new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/transactions/`);
+            let lastTen = true
+            if (lastTen) {
+                url.searchParams.append('lastTen', 'true');
+            }
+            const response = await fetch(url.toString());
+            const data = await response.json();
+            setTransactionsList(data.allTransactions || []);
+        } catch (error) {
+            console.error('Error fetching Mnemonics:', error);
+        }
+    };
+
+    useEffect(() => {
+        gettenTransaction();
+    }, []);
+
+    const getStatusClassName = (status: any) => {
+        switch (status) {
+            case 'SUCCESS':
+                return 'bg-success/20 text-success';
+            case 'COMPLETED':
+                return 'bg-success/20 text-success';
+            case 'PENDING':
+                return 'bg-info/20 text-info';
+            case 'INPROGRESS':
+                return 'bg-info/20 text-info';
+            case 'FAILED':
+                return 'bg-danger/20 text-danger';
+            default:
+                return '';
+        }
+    };
+
+    const showMessage = (msg = '', type = 'success') => {
+        const toast: any = Swal.mixin({
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 3000,
+            customClass: { container: 'toast' },
+        });
+        toast.fire({
+            icon: type,
+            title: msg,
+            padding: '10px 20px',
+        });
+    };
+
+    const onCopy = (text: any) => {
+        navigator.clipboard
+            .writeText(text)
+            .then(() => {
+                showMessage('Copied to clipboard!');
+            })
+            .catch((err) => {
+                console.error('Failed to copy!', err);
+            });
+    };
+
     return (
         <div>
             <ul className="flex space-x-2 rtl:space-x-reverse">
@@ -746,68 +811,30 @@ const ComponentsDashboardFinance = () => {
                             <table>
                                 <thead>
                                     <tr>
-                                        <th className="ltr:rounded-l-md rtl:rounded-r-md">ID</th>
-                                        <th>DATE</th>
-                                        <th>NAME</th>
+                                        <th style={{width: '110px'}} className="ltr:rounded-l-md rtl:rounded-r-md">ID</th>
+                                        <th>ASSET</th>
+                                        <th>TRX NAME</th>
                                         <th>AMOUNT</th>
                                         <th className="text-center ltr:rounded-r-md rtl:rounded-l-md">STATUS</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td className="font-semibold">#01</td>
-                                        <td className="whitespace-nowrap">Oct 08, 2021</td>
-                                        <td className="whitespace-nowrap">Eric Page</td>
-                                        <td>$1,358.75</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-success/20 text-success hover:top-0">Completed</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#02</td>
-                                        <td className="whitespace-nowrap">Dec 18, 2021</td>
-                                        <td className="whitespace-nowrap">Nita Parr</td>
-                                        <td>-$1,042.82</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-info/20 text-info hover:top-0">In Process</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#03</td>
-                                        <td className="whitespace-nowrap">Dec 25, 2021</td>
-                                        <td className="whitespace-nowrap">Carl Bell</td>
-                                        <td>$1,828.16</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-danger/20 text-danger hover:top-0">Pending</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#04</td>
-                                        <td className="whitespace-nowrap">Nov 29, 2021</td>
-                                        <td className="whitespace-nowrap">Dan Hart</td>
-                                        <td>$1,647.55</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-success/20 text-success hover:top-0">Completed</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#05</td>
-                                        <td className="whitespace-nowrap">Nov 24, 2021</td>
-                                        <td className="whitespace-nowrap">Jake Ross</td>
-                                        <td>$927.43</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-success/20 text-success hover:top-0">Completed</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td className="font-semibold">#06</td>
-                                        <td className="whitespace-nowrap">Jan 26, 2022</td>
-                                        <td className="whitespace-nowrap">Anna Bell</td>
-                                        <td>$250.00</td>
-                                        <td className="text-center">
-                                            <span className="badge rounded-full bg-info/20 text-info hover:top-0">In Process</span>
-                                        </td>
-                                    </tr>
+                                    {transactionsList.map((transaction: any) => (
+                                        <tr key={transaction.id}>
+                                            <td  className="font-semibold flex overflow-hidden overflow-ellipsis whitespace-nowrap max-w-xs">
+                                               <span style={{width: '110px', overflow:'hidden'}} className='me-2 cursor-pointer'> {transaction.transactionId}</span>
+                                                <span className='cursor-pointer' onClick={() => onCopy(transaction.transactionId)}><IconCopy /></span>
+                                            </td>
+                                            <td className="whitespace-nowrap">{transaction.assetId}</td>
+                                            <td className="whitespace-nowrap">{transaction.transactiontype}</td>
+                                            <td>{transaction.amount}</td>
+                                            <td className="text-center">
+                                                <span className={`badge rounded-full ${getStatusClassName(transaction.status)} hover:top-0`}>
+                                                    {transaction.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>
