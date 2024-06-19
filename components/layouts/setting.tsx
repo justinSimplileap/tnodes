@@ -34,9 +34,9 @@ const Setting = () => {
 
     useEffect(() => {
         getAllTransaction(filters);
-        const intervalId = setInterval(() => getAllTransaction(filters), 1500);
+        // const intervalId = setInterval(() => getAllTransaction(filters), 1500);
 
-        return () => clearInterval(intervalId);
+        // return () => clearInterval(intervalId);
     }, [filters]);
 
     const openTransactionModal = (transaction: any) => {

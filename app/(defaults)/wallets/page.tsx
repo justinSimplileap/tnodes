@@ -1,7 +1,7 @@
 import ComponentsAppsWallets from '@/components/wallets/components-apps-wallets';
 import React from 'react';
 
-const Wallets = () => {
+const Vaults = () => {
     return (
         <div>
             <ComponentsAppsWallets />
@@ -9,4 +9,4 @@ const Wallets = () => {
     );
 };
 
-export default Wallets;
+export default Vaults;

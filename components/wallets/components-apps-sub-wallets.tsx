@@ -7,76 +7,42 @@ import IconPlus from '../icon/icon-plus';
 import { useRouter } from 'next/navigation';
 import { Transition, Dialog } from '@headlessui/react';
 import Swal from 'sweetalert2';
+import IconCopy from '../icon/icon-copy';
 
-const ComponentsAppsWallets = () => {
+const ComponentsAppsSubWallets = () => {
     const [value, setValue] = useState<any>('list');
     const [search, setSearch] = useState<any>('');
-    const [mnemonicsList, setMnemonicsList] = useState<any>([]);
+    const [subWalletName, setSubWalletName] = useState<any>([]);
     const [addWallet, setAddWallet] = useState<any>(false);
 
-    console.log('mnemonicsList', mnemonicsList);
-
-    const getAllMnemonics = async () => {
+    const getAllSubWallets = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/wallets`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/subwallets/getSubWallets`);
             const data = await response.json();
-            setMnemonicsList(data.walletName || []);
+            setSubWalletName(data.subWalletName || []);
         } catch (error) {
             console.error('Error fetching Mnemonics:', error);
         }
     };
 
     useEffect(() => {
-        getAllMnemonics();
+        getAllSubWallets();
     }, []);
 
-    const [filteredItems, setFilteredItems] = useState<any>(mnemonicsList);
-
-    const searchmnemonic = () => {
-        setFilteredItems(() => {
-            return mnemonicsList.filter((item: any) => {
-                return item.name.toLowerCase().includes(search.toLowerCase());
-            });
-        });
-    };
-
-    useEffect(() => {
-        searchmnemonic();
-    }, [search]);
-
-    const handleClick = async () => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/wallets/create`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) {
-                throw new Error('Failed to create wallet');
-            }
-            const data = await response.json();
-            console.log(data);
-            getAllMnemonics();
-            setAddWallet(false);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
     const router = useRouter();
     const viewMnemonic = (id: number) => {
         console.log('ID:', id);
-        void router.push(`./wallets/${id}`);
+        void router.push(`./subwallets/${id}`);
     };
 
-    // const maskAddress = (address: string): string => {
-    //     if (address.length < 8) {
-    //         throw new Error('Address is too short to mask');
-    //     }
-    //     const firstFour = address.slice(0, 8);
-    //     const masked = `${firstFour}...`;
-    //     return masked;
-    // };
+    const maskAddress = (address: string): string => {
+        if (address.length < 16) {
+            throw new Error('Address is too short to mask');
+        }
+        const firstFour = address.slice(0, 16);
+        const masked = `${firstFour}...`;
+        return masked;
+    };
 
     const showMessage = (msg = '', type = 'success') => {
         const toast: any = Swal.mixin({
@@ -107,15 +73,13 @@ const ComponentsAppsWallets = () => {
     return (
         <div>
             <div className="flex flex-wrap items-center justify-between gap-4">
-                <h2 className="text-xl">Wallets</h2>
+                <h2 className=" text-base dark:text-white-dark">
+                    Sub-Wallets
+                    {/* <span className=" font-bold dark:text-white ">{walletId}</span> */}
+                </h2>
+
                 <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                     <div className="flex gap-3">
-                        <div>
-                            <button onClick={() => setAddWallet(true)} type="button" className="btn btn-primary">
-                                <IconPlus className="ltr:mr-2 rtl:ml-2" />
-                                Create Wallet
-                            </button>
-                        </div>
                         <div>
                             <button type="button" className={`btn btn-outline-primary p-2 ${value === 'list' && 'bg-primary text-white'}`} onClick={() => setValue('list')}>
                                 <IconListCheck />
@@ -141,24 +105,26 @@ const ComponentsAppsWallets = () => {
                         <table className="table-striped table-hover">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
+                                    <th>WalletId</th>
+                                    <th>SubWalletId</th>
+                                    {/* <th>PrivateKey</th>
+                                    <th>PublicKey</th> */}
                                     <th className="!text-center">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {mnemonicsList.map((mnemonic: any) => {
+                                {subWalletName.map((subWallet: any) => {
                                     return (
-                                        <tr key={mnemonic.id}>
-                                            <td className=" flex-1">{mnemonic.id}</td>
+                                        <tr key={subWallet.walletId}>
+                                            <td className=" flex-1">{subWallet.walletId}</td>
                                             <td>
                                                 <div className="flex w-max flex-1 items-center">
-                                                    <div>{mnemonic.walletName}</div>
+                                                    <div>{subWallet.subWalletId}</div>
                                                 </div>
                                             </td>
                                             <td>
                                                 <div className="flex items-center justify-center gap-4">
-                                                    <button type="button" onClick={() => viewMnemonic(mnemonic.id)} className="btn btn-sm btn-outline-primary">
+                                                    <button type="button" onClick={() => viewMnemonic(subWallet.id)} className="btn btn-sm btn-outline-primary">
                                                         View
                                                     </button>
                                                 </div>
@@ -174,22 +140,22 @@ const ComponentsAppsWallets = () => {
 
             {value === 'grid' && (
                 <div className="mt-5 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-                    {mnemonicsList.map((mnemonic: any) => {
+                    {subWalletName.map((mnemonic: any) => {
                         return (
                             <div className="relative overflow-hidden rounded-md bg-white text-center shadow dark:bg-[#1c232f]" key={mnemonic.id}>
                                 <div className="relative overflow-hidden rounded-md bg-white text-center shadow dark:bg-[#1c232f]">
                                     <div className="relative px-6 pb-24">
                                         <div className="rounded-md bg-white px-2 py-4 shadow-md dark:bg-gray-900">
-                                            <div className="text-white-dark">{mnemonic.walletName}</div>
+                                            <div className="text-xl">{mnemonic.subWalletId}</div>
                                         </div>
                                         <div className="mt-6 grid grid-cols-1 gap-4 ltr:text-left rtl:text-right">
                                             <div className="flex items-center">
-                                                <div className="flex-none ltr:mr-2 rtl:ml-2">Id :</div>
-                                                <div className="truncate text-white-dark">{mnemonic.id}</div>
+                                                <div className="flex-none ltr:mr-2 rtl:ml-2">Wallet Id :</div>
+                                                <div className="truncate text-white-dark">{mnemonic.walletId}</div>
                                             </div>
                                             <div className="flex items-center">
-                                                <div className="flex-none ltr:mr-2 rtl:ml-2">Name :</div>
-                                                <div className="truncate text-white-dark">{mnemonic.walletName}</div>
+                                                <div className="flex-none ltr:mr-2 rtl:ml-2">Sub-Wallet Id :</div>
+                                                <div className="truncate text-white-dark">{mnemonic.subWalletId}</div>
                                             </div>
                                         </div>
                                     </div>
@@ -205,7 +171,7 @@ const ComponentsAppsWallets = () => {
                 </div>
             )}
 
-            <Transition appear show={addWallet} as={Fragment}>
+            {/* <Transition appear show={addWallet} as={Fragment}>
                 <Dialog as="div" open={addWallet} onClose={() => setAddWallet(false)} className="relative z-50">
                     <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
                         <div className="fixed inset-0 bg-[black]/60" />
@@ -238,9 +204,9 @@ const ComponentsAppsWallets = () => {
                         </div>
                     </div>
                 </Dialog>
-            </Transition>
+            </Transition> */}
         </div>
     );
 };
 
-export default ComponentsAppsWallets;
+export default ComponentsAppsSubWallets;

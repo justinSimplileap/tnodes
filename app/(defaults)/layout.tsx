@@ -32,10 +32,6 @@ export default function DefaultLayout({ children }: { children: React.ReactNode 
                         {/* BEGIN CONTENT AREA */}
                         <ContentAnimation>{children}</ContentAnimation>
                         {/* END CONTENT AREA */}
-
-                        {/* BEGIN FOOTER */}
-                        {/* <Footer /> */}
-                        {/* END FOOTER */}
                         <Portals />
                     </div>
                 </MainContainer>

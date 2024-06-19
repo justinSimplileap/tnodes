@@ -116,7 +116,7 @@ const Transactions = () => {
                                     <th>ID</th>
                                     <th>AssetId</th>
                                     <th>Transaction Id</th>
-                                    <th>Transaction Type</th>
+                                    <th className="whitespace-nowrap">Transaction Type</th>
                                     <th>Transaction Hash</th>
                                     <th>From Address</th>
                                     <th>To Address</th>

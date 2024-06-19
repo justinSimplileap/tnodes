@@ -1,21 +1,20 @@
 'use client';
+import { MuseoModerno } from 'next/font/google';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import { toggleSidebar } from '@/store/themeConfigSlice';
-import AnimateHeight from 'react-animate-height';
 import { IRootState } from '@/store';
 import { useState, useEffect } from 'react';
 import IconCaretsDown from '@/components/icon/icon-carets-down';
 import IconMenuDashboard from '@/components/icon/menu/icon-menu-dashboard';
-import IconCaretDown from '@/components/icon/icon-caret-down';
 import IconMenuWidgets from '@/components/icon/menu/icon-menu-widgets';
-import IconMenuFontIcons from '@/components/icon/menu/icon-menu-font-icons';
-import IconMenuDragAndDrop from '@/components/icon/menu/icon-menu-drag-and-drop';
-import IconMenuAuthentication from '@/components/icon/menu/icon-menu-authentication';
 import { usePathname } from 'next/navigation';
 import { getTranslation } from '@/i18n';
 import IconCreditCard from '../icon/icon-credit-card';
+import Image from 'next/image';
+
+const museoModerno = MuseoModerno({ subsets: ['latin'] });
 
 const Sidebar = () => {
     const dispatch = useDispatch();
@@ -72,10 +71,11 @@ const Sidebar = () => {
                 <div className="h-full bg-white dark:bg-black">
                     <div className="flex items-center justify-between px-4 py-3">
                         <Link href="/" className="main-logo flex shrink-0 items-center">
-                            <img className="ml-[5px] w-8 flex-none " src="/assets/images/logo.svg" alt="logo" />
-                            <span className="align-middle text-2xl font-semibold dark:text-white-light lg:inline ltr:ml-1.5 rtl:mr-1.5">
-                                <span className="dark:text-white">Turbo</span> <span className=" text-[#6e07e5] ">Nodes</span>{' '}
-                            </span>
+                            <Image width={32} height={32} className="ml-[5px] mr-[-4px] w-8 flex-none " src="/assets/images/logo.svg" alt="logo" />
+                            <p className={`${museoModerno.className} align-middle text-2xl font-semibold dark:text-white-light lg:inline ltr:ml-1.5 rtl:mr-1.5`}>
+                                <span className="dark:text-white">turbo</span>
+                                <span className=" text-[#6e07e5] ">nodes</span>
+                            </p>
                         </Link>
 
                         <button

@@ -1,4 +1,5 @@
 'use client';
+import { MuseoModerno } from 'next/font/google';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
@@ -6,16 +7,12 @@ import { IRootState } from '@/store';
 import { toggleTheme, toggleSidebar, toggleRTL } from '@/store/themeConfigSlice';
 import Dropdown from '@/components/dropdown';
 import IconMenu from '@/components/icon/icon-menu';
-import IconCalendar from '@/components/icon/icon-calendar';
 import IconEdit from '@/components/icon/icon-edit';
-import IconChatNotification from '@/components/icon/icon-chat-notification';
 import IconSearch from '@/components/icon/icon-search';
 import IconXCircle from '@/components/icon/icon-x-circle';
 import IconSun from '@/components/icon/icon-sun';
 import IconMoon from '@/components/icon/icon-moon';
 import IconLaptop from '@/components/icon/icon-laptop';
-import IconMailDot from '@/components/icon/icon-mail-dot';
-import IconArrowLeft from '@/components/icon/icon-arrow-left';
 import IconInfoCircle from '@/components/icon/icon-info-circle';
 import IconBellBing from '@/components/icon/icon-bell-bing';
 import IconUser from '@/components/icon/icon-user';
@@ -34,6 +31,8 @@ import IconMenuMore from '@/components/icon/menu/icon-menu-more';
 import { usePathname, useRouter } from 'next/navigation';
 import { getTranslation } from '@/i18n';
 import Image from 'next/image';
+
+const museoModerno = MuseoModerno({ subsets: ['latin'] });
 
 const Header = () => {
     const pathname = usePathname();
@@ -152,10 +151,11 @@ const Header = () => {
                 <div className="relative flex w-full items-center bg-white px-5 py-2.5 dark:bg-black">
                     <div className="horizontal-logo flex items-center justify-between lg:hidden ltr:mr-2 rtl:ml-2">
                         <Link href="/" className="main-logo flex shrink-0 items-center">
-                            <img className="ml-[5px] w-8 flex-none " src="/assets/images/logo.svg" alt="logo" />
-                            <span className="align-middle text-2xl font-semibold dark:text-white-light lg:inline ltr:ml-1.5 rtl:mr-1.5">
-                                <span className="dark:text-white">Turbo</span> <span className=" text-[#6e07e5] ">Nodes</span>
-                            </span>
+                            <Image width={32} height={32} className="ml-[5px] mr-[-4px] w-8 flex-none " src="/assets/images/logo.svg" alt="logo" />
+                            <p className={`${museoModerno.className} align-middle text-2xl font-semibold  dark:text-white-light lg:inline ltr:ml-1.5 rtl:mr-1.5`}>
+                                <span className="dark:text-white">turbo</span>
+                                <span className=" text-[#6e07e5] ">nodes</span>
+                            </p>
                         </Link>
                         <button
                             type="button"

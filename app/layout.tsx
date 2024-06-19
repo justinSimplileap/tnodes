@@ -8,8 +8,8 @@ import MainContainer from '@/components/layouts/main-container';
 
 export const metadata: Metadata = {
     title: {
-        template: '%s | Simplileap - Multipurpose Dashboard',
-        default: 'Simplileap - Multipurpose Dashboard',
+        template: '%s | Turbo Nodes - Multipurpose Dashboard',
+        default: 'Turbo Nodes - Multipurpose Dashboard',
     },
 };
 const nunito = Nunito({

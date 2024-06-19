@@ -26,9 +26,9 @@ interface Address {
     walletAddress: string;
 }
 
-function WalletDetails() {
+function SubWalletDetails() {
     const pathname = usePathname();
-    const walletId = pathname.split('/wallets/')[1];
+    const walletId = pathname.split('/wallets/subwallets/')[1];
     const [mnemonicsList, setMnemonicsList] = useState<any>([]);
     const [getBalance, setgetBalance] = useState<any>([]);
     const [walletName, setWalletName] = useState([]);
@@ -38,14 +38,14 @@ function WalletDetails() {
     const getAllMnemonics = async (walletId: string) => {
         setLoading(true);
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/wallets/${walletId}`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/subwallets/getSubWallets/${walletId}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
 
             const data = await response.json();
-            setWalletName(data.walletName.walletName);
-            setMnemonicsList(data.walletName.WalletAddresses);
+            // setWalletName(data.walletName.walletName);
+            setMnemonicsList(data.walletName.SubWalletAddresses);
             if (data) {
                 console.log('data waited and printed');
             }
@@ -114,25 +114,6 @@ function WalletDetails() {
 
     // ---------------------------------------------------
 
-    const handleClick = async () => {
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/subwallets/${walletId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            if (!response.ok) {
-                throw new Error('Failed to create wallet');
-            }
-            const data = await response.json();
-            console.log(data);
-            setAddSubWallet(false);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
-
     const maskAddress = (address: string): string => {
         if (address.length < 16) {
             throw new Error('Address is too short to mask');
@@ -190,17 +171,10 @@ function WalletDetails() {
                 <div className="flex items-center justify-between">
                     <div className="flex w-fit gap-4 rounded-md bg-white px-4 py-3 shadow dark:bg-[#1c232f] dark:text-white-dark">
                         <h2 className=" text-base">
-                            Wallet ID: <span className=" font-bold dark:text-white ">{walletId}</span>
-                        </h2>
-                        <h2 className=" text-base">
-                            Wallet Name: <span className=" font-bold dark:text-white">{walletName}</span>
+                            Sub-Wallet ID: <span className=" font-bold dark:text-white ">{walletId}</span>
                         </h2>
                     </div>
                     <div className="flex w-fit gap-4 rounded-md  px-4 py-3 ">
-                        <button onClick={() => setAddSubWallet(true)} type="button" className="btn btn-outline-primary">
-                            <IconPlus className="ltr:mr-2 rtl:ml-2" />
-                            Create Sub-Wallet
-                        </button>
                         <Link href="/wallets/subwallets" type="button" className="btn btn-primary">
                             View Sub-Wallets
                         </Link>
@@ -268,52 +242,9 @@ function WalletDetails() {
                         </table>
                     </div>
                 </div>
-
-                <Transition appear show={addSubWallet} as={Fragment}>
-                    <Dialog as="div" open={addSubWallet} onClose={() => setAddSubWallet(false)} className="relative z-50">
-                        <Transition.Child
-                            as={Fragment}
-                            enter="ease-out duration-300"
-                            enterFrom="opacity-0"
-                            enterTo="opacity-100"
-                            leave="ease-in duration-200"
-                            leaveFrom="opacity-100"
-                            leaveTo="opacity-0"
-                        >
-                            <div className="fixed inset-0 bg-[black]/60" />
-                        </Transition.Child>
-                        <div className="fixed inset-0 overflow-y-auto">
-                            <div className="flex min-h-full items-center justify-center px-4 py-8">
-                                <Transition.Child
-                                    as={Fragment}
-                                    enter="ease-out duration-300"
-                                    enterFrom="opacity-0 scale-95"
-                                    enterTo="opacity-100 scale-100"
-                                    leave="ease-in duration-200"
-                                    leaveFrom="opacity-100 scale-100"
-                                    leaveTo="opacity-0 scale-95"
-                                >
-                                    <Dialog.Panel className="panel my-8 w-full max-w-md overflow-hidden rounded-lg border-0 p-0 text-black dark:text-white-dark">
-                                        <div className="p-5">
-                                            <p>Are you sure you want to create a new sub-wallet?.</p>
-                                            <div className="mt-8 flex items-center justify-end">
-                                                <button onClick={() => setAddSubWallet(false)} type="button" className="btn btn-outline-danger">
-                                                    Discard
-                                                </button>
-                                                <button onClick={handleClick} type="button" className="btn btn-primary ltr:ml-4 rtl:mr-4">
-                                                    Create
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </Dialog.Panel>
-                                </Transition.Child>
-                            </div>
-                        </div>
-                    </Dialog>
-                </Transition>
             </>
         </div>
     );
 }
 
-export default WalletDetails;
+export default SubWalletDetails;
