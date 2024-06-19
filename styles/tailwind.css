@@ -677,3 +677,7 @@ img.dark-img {
 .dark img.dark-img {
     @apply !block;
 }
+
+.scrollbar-container {
+    height: 'unset !important'
+}

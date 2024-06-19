@@ -7,6 +7,7 @@ import Dropdown from '../dropdown';
 import IconSettings from '@/components/icon/icon-settings';
 import IconX from '@/components/icon/icon-x';
 import MuiLoading from '../MuiLoading';
+import Transaction from '../../types/index';
 
 const Setting = () => {
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);
