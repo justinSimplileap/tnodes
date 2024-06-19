@@ -15,6 +15,10 @@ import IconCreditCard from '../icon/icon-credit-card';
 import IconUsers from '../icon/icon-users';
 import { useRouter } from 'next/navigation';
 import IconCashBanknotes from '../icon/icon-cash-banknotes';
+import Logo from '@/public/assets/images/logo.svg';
+import Image from 'next/image';
+
+const museoModerno = MuseoModerno({ subsets: ['latin'] });
 
 const Sidebar = () => {
     const dispatch = useDispatch();
@@ -78,7 +82,7 @@ const Sidebar = () => {
                 <div className="h-full bg-white dark:bg-black">
                     <div className="flex items-center justify-between px-4 py-3">
                         <Link href="/" className="main-logo flex shrink-0 items-center">
-                            <Image width={32} height={32} className="ml-[5px] mr-[-4px] w-8 flex-none " src="/assets/images/logo.svg" alt="logo" />
+                            <Image width={32} height={32} className="ml-[5px] mr-[-4px] w-8 flex-none " src={Logo} alt="logo" />
                             <p className={`${museoModerno.className} align-middle text-2xl font-semibold dark:text-white-light lg:inline ltr:ml-1.5 rtl:mr-1.5`}>
                                 <span className="dark:text-white">turbo</span>
                                 <span className=" text-[#6e07e5] ">nodes</span>
